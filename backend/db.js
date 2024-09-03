@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 async function main() {
-  await mongoose.connect("your connection string");
+  await mongoose.connect("");
 }
 const userSchema = new mongoose.Schema({
   username: {
@@ -33,4 +33,6 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema);
 
-module.exports();
+module.exports({
+  User,
+});
