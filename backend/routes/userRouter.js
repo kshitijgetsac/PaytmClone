@@ -1,6 +1,10 @@
 const express = require("express");
 const z = require("zod");
-const user = require("../db");
+const mongoose = require("mongoose");
+const User = require("../db.js");
+
+const JWT_SECRET = require("./config");
+const jwt = require("jsonwebtoken");
 const signupBody = z.object({
   username: z.string().email(),
   firstName: z.string(),
@@ -19,19 +23,27 @@ userRouter.post("/signup", async (req, res) => {
   const existingUser = await User.findOne({
     username: req.body.username,
   });
-  if (existingUser == NULL) {
+  if (existingUser != null) {
     res.status(411).json({
       msg: "user with this email already exists please try with different username",
     });
     return;
   }
-  await User.create({
-    username: req.body.email,
+  const dbUser = await User.create({
+    username: req.body.username,
     password: req.body.password,
-    firstName: req.body.firstname,
+    firstname: req.body.firstname,
     lastname: req.body.lastname,
   });
+  const token = jwt.sign(
+    {
+      userid: dbUser._id,
+    },
+    JWT_SECRET
+  );
+  res.status(200).json({
+    msg: "user created successfully",
+    token: token,
+  });
 });
-module.exports({
-  userRouter,
-});
+module.exports = userRouter;
