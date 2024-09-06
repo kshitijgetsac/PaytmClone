@@ -3,7 +3,7 @@ const z = require("zod");
 const mongoose = require("mongoose");
 const User = require("../db.js");
 
-const JWT_SECRET = require("./config");
+const { JWT_SECRET } = require("./config");
 const jwt = require("jsonwebtoken");
 const signupBody = z.object({
   username: z.string().email(),
@@ -46,4 +46,5 @@ userRouter.post("/signup", async (req, res) => {
     token: token,
   });
 });
+
 module.exports = userRouter;

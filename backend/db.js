@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-
-mongoose.connect("your connection string");
+const { mongoConnectionString } = require("./routes/config");
+mongoose.connect(mongoConnectionString);
 const userSchema = new mongoose.Schema({
   username: { type: String },
   password: { type: String },
