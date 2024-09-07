@@ -1,7 +1,7 @@
 const express = require("express");
 const z = require("zod");
 const mongoose = require("mongoose");
-const User = require("../db.js");
+const { User, Account } = require("../db.js");
 
 const { JWT_SECRET } = require("./config");
 const jwt = require("jsonwebtoken");
@@ -35,6 +35,11 @@ userRouter.post("/signup", async (req, res) => {
     password: req.body.password,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
+  });
+  const amountToAllocate = Math.floor(Math.random() * 10000000);
+  const AccountUser = await Account.create({
+    userid: dbUser._id,
+    balance: amountToAllocate,
   });
   const token = jwt.sign(
     {
