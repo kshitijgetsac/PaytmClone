@@ -47,6 +47,40 @@ userRouter.post("/signup", async (req, res) => {
     token: token,
   });
 });
+const signInbody = z.object({
+  username: z.string().email(),
+  password: z.string(),
+});
+userRouter.post("/signin", async (req, res) => {
+  const success = signInbody.safeParse(req.body);
+  if (!success) {
+    res.status(411).json({
+      msg: "invalid inputs",
+    });
+    return;
+  }
+  const username = req.body.username;
+  const password = req.body.password;
+  const findUser = await User.findOne({
+    username: username,
+    password: password,
+  });
+  if (!finduser) {
+    res.status(411).json({
+      msg: "wrong email or password",
+    });
+  }
+  const token = jwt.sign(
+    {
+      userid: finduser._id,
+    },
+    JWT_SECRET
+  );
+  res.status(200).json({
+    token: token,
+    msg: "login successful",
+  });
+});
 const updateBody = z.object({
   firstname: z.string(),
   lastname: z.string(),
@@ -87,7 +121,7 @@ const getNamesObject = z.object({
   firstname: z.string(),
 });
 userRouter.get("/bulk", async (req, res) => {
-  const name = req.query.firstname;
+  const filter = req.query.firstname;
   const success = getNamesObject.safeParse(req.query);
   if (!success) {
     return res.status(415).json({
@@ -95,11 +129,22 @@ userRouter.get("/bulk", async (req, res) => {
     });
   }
   const usersArray = await User.find({
-    firstname: req.query.firstname,
+    $or: [
+      {
+        firstName: {
+          $regex: filter,
+        },
+      },
+      {
+        lastName: {
+          $regex: filter,
+        },
+      },
+    ],
   });
   if (!usersArray) {
     res.status(200).json({
-      msg: "no users found",
+      msg: [],
     });
   }
   res.status(200).json(
