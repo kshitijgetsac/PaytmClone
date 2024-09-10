@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 export function Users() {
   const [users, setUsers] = useState([
     {
@@ -24,6 +25,7 @@ export function Users() {
   );
 }
 function User({ user }) {
+  function revertoSendMoney() {}
   return (
     <div className="flex justify-between ">
       <div className="flex">
@@ -35,7 +37,10 @@ function User({ user }) {
         </div>
       </div>
       <div>
-        <button className="mr-2 bg-black text-white text-sm mt-2 border rounded-lg h-12">
+        <button
+          onClick={revertoSendMoney}
+          className="mr-2 bg-black text-white text-sm mt-2 border rounded-lg h-12 w-24"
+        >
           Send Money
         </button>
       </div>
