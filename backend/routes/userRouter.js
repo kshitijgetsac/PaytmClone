@@ -14,6 +14,7 @@ const signupBody = z.object({
 });
 const userRouter = express.Router();
 userRouter.post("/signup", async (req, res) => {
+  console.log("here");
   const isSuccessful = signupBody.safeParse(req.body);
   if (!isSuccessful) {
     res.status(411).json({
@@ -70,14 +71,16 @@ userRouter.post("/signin", async (req, res) => {
     username: username,
     password: password,
   });
-  if (!finduser) {
+
+  if (!findUser || findUser === null) {
     res.status(411).json({
       msg: "wrong email or password",
     });
+    return;
   }
   const token = jwt.sign(
     {
-      userid: finduser._id,
+      userid: findUser._id,
     },
     JWT_SECRET
   );
