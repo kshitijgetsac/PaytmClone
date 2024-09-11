@@ -129,7 +129,6 @@ const getNamesObject = z.object({
 });
 userRouter.get("/bulk", async (req, res) => {
   const filter = req.query.firstname || "";
-  console.log("in bulk endpoint");
   const success = getNamesObject.safeParse(req.query);
   if (!success) {
     return res.status(415).json({

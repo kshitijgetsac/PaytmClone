@@ -16,7 +16,7 @@ accountRouter.get("/balance", authMiddleware, async (req, res) => {
     });
     return;
   }
-  console.log(AccountDetails.balance);
+
   res.status(200).json({ balance: AccountDetails.balance });
 });
 const TransferBody = z.object({

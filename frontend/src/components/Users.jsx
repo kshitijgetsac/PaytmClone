@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 export function Users() {
   const [filter, setFilter] = useState("");
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
   async function getUsersfromBackend() {
     const response = await axios.get("http://localhost:3000/api/v1/user/bulk", {
       params: {
@@ -48,6 +49,7 @@ export function Users() {
   );
 }
 function User({ user }) {
+  const navigate = useNavigate();
   return (
     <div className="flex justify-between ">
       <div className="flex">
@@ -59,7 +61,12 @@ function User({ user }) {
         </div>
       </div>
       <div>
-        <button className="mr-2 bg-black text-white text-sm mt-2 border rounded-lg h-12 w-24">
+        <button
+          onClick={(e) =>
+            navigate("/sendMoney?id=" + user.id + "&name=" + user.firstname)
+          }
+          className="mr-2 bg-black text-white text-sm mt-2 border rounded-lg h-12 w-24"
+        >
           Send Money
         </button>
       </div>
