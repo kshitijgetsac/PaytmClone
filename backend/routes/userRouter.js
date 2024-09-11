@@ -14,7 +14,6 @@ const signupBody = z.object({
 });
 const userRouter = express.Router();
 userRouter.post("/signup", async (req, res) => {
-  console.log("here");
   const isSuccessful = signupBody.safeParse(req.body);
   if (!isSuccessful) {
     res.status(411).json({
@@ -129,7 +128,8 @@ const getNamesObject = z.object({
   firstname: z.string(),
 });
 userRouter.get("/bulk", async (req, res) => {
-  const filter = req.query.firstname;
+  const filter = req.query.firstname || "";
+  console.log("in bulk endpoint");
   const success = getNamesObject.safeParse(req.query);
   if (!success) {
     return res.status(415).json({
@@ -139,12 +139,12 @@ userRouter.get("/bulk", async (req, res) => {
   const usersArray = await User.find({
     $or: [
       {
-        firstName: {
+        firstname: {
           $regex: filter,
         },
       },
       {
-        lastName: {
+        lastname: {
           $regex: filter,
         },
       },
